@@ -1,0 +1,21 @@
+version: "3.3"
+services:
+  ss-tunnel:
+    image: ss-tunnel
+    restart: always
+    volumes:
+      - ./config.json:/etc/config.json
+    depends_on:
+      - db
+  coredns:
+    image: coredns/coredns
+    restart: always
+    command: -conf /data/Corefile
+    ports:
+      - 53:5356/udp
+    volumes:
+      - ./Corefile:/data/Corefile
+    link:
+      - ss-tunnel
+    depends_on:
+      - ss-tunnel
